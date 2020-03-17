@@ -851,7 +851,7 @@ Important point here is, as opposed to pod ClusterIPs, service ClusterIPs are st
 
 ### [Backup Restore Requirements](#backup-restore-requirements)
 * Persistence should be enabled in relevant components (Orderer, Peer, CouchDB)
-* Configure Argo for some artifact repository. Easiest way is to install [Minio](https://github.com/argoproj/argo/blob/master/ARTIFACT_REPO.md) 
+* Configure Argo for some artifact repository. Easiest way is to install [Minio](https://github.com/argoproj/argo/blob/master/docs/configure-artifact-repository.md) 
 * An Azure Blob Storage account with a container named `hlf-backup` (configurable). 
 ATM, backups can only be stored at Azure Blob Storage but it's quite easy to extend backup/restore 
 flows for other mediums, like AWS S3. See bottom of [backup-workflow.yaml](fabric-kube/backup-flow/templates/backup-workflow.yaml)
