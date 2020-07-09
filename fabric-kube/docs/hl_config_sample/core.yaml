@@ -9,7 +9,6 @@
 #
 ###############################################################################
 peer:
-
     # The Peer id is used for identifying this Peer instance.
     id: jdoe
 
@@ -70,7 +69,6 @@ peer:
             # Timeout is the duration the client waits for a response from
             # ordering nodes before closing the connection
             timeout: 20s
-
 
     # Gossip related configuration
     gossip:
@@ -226,7 +224,7 @@ peer:
     # not mutual TLS auth. See comments on chaincodeListenAddress for more info
     tls:
         # Require server-side TLS
-        enabled:  false
+        enabled: false
         # Require client certificates / mutual TLS.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
@@ -244,7 +242,7 @@ peer:
         # Set of root certificate authorities used to verify client certificates
         clientRootCAs:
             files:
-              - tls/ca.crt
+                - tls/ca.crt
         # Private key used for TLS when making client connections.  If
         # not set, peer.tls.key.file will be used instead
         clientKey:
@@ -329,7 +327,7 @@ peer:
     # Used with Go profiling tools only in none production environment. In
     # production, it should be disabled (eg enabled: false)
     profile:
-        enabled:     false
+        enabled: false
         listenAddress: 0.0.0.0:6060
 
     # The admin service is used for administrative operations such as
@@ -376,21 +374,18 @@ peer:
     #     library: /etc/hyperledger/fabric/plugin/escc.so
     handlers:
         authFilters:
-          -
-            name: DefaultAuth
-          -
-            name: ExpirationCheck    # This filter checks identity x509 certificate expiration
+            - name: DefaultAuth
+            - name: ExpirationCheck # This filter checks identity x509 certificate expiration
         decorators:
-          -
-            name: DefaultDecorator
+            - name: DefaultDecorator
         endorsers:
-          escc:
-            name: DefaultEndorsement
-            library:
+            escc:
+                name: DefaultEndorsement
+                library:
         validators:
-          vscc:
-            name: DefaultValidation
-            library:
+            vscc:
+                name: DefaultValidation
+                library:
 
     #    library: /etc/hyperledger/fabric/plugin/escc.so
     # Number of goroutines that will execute transaction validation in parallel.
@@ -421,7 +416,6 @@ peer:
 #
 ###############################################################################
 vm:
-
     # Endpoint of the vm management system.  For docker can be one of the following in general
     # unix:///var/run/docker.sock
     # http://localhost:2375
@@ -441,7 +435,7 @@ vm:
 
         # Enables/disables the standard out/err from chaincode containers for
         # debugging purposes
-        attachStdout: false
+        attachStdout: true
 
         # Parameters on creating docker container.
         # Container may be efficiently created using ipam & dns-server for cluster
@@ -457,7 +451,7 @@ vm:
         hostConfig:
             NetworkMode: host
             Dns:
-               # - 192.168.0.1
+                # - 192.168.0.1
             LogConfig:
                 Type: json-file
                 Config:
@@ -471,7 +465,6 @@ vm:
 #
 ###############################################################################
 chaincode:
-
     # The id is used by the Chaincode stub to register the executing Chaincode
     # ID with the Peer and is generally supplied through ENV variables
     # the `path` form of ID is provided when installing the chaincode.
@@ -532,7 +525,7 @@ chaincode:
     # In net mode, peer will run chaincode in a docker container.
     mode: net
 
-    # keepalive in seconds. In situations where the communiction goes through a
+    # keepalive in seconds. In situations where the communication goes through a
     # proxy that does not support keep-alive, this parameter will maintain connection
     # between peer and chaincode.
     # A value <= 0 turns keepalive off
@@ -553,21 +546,21 @@ chaincode:
     # See examples/plugins/scc for an example.
     # Plugins must be white listed in the chaincode.system section above.
     systemPlugins:
-      # example configuration:
-      # - enabled: true
-      #   name: myscc
-      #   path: /opt/lib/myscc.so
-      #   invokableExternal: true
-      #   invokableCC2CC: true
+        # example configuration:
+        # - enabled: true
+        #   name: myscc
+        #   path: /opt/lib/myscc.so
+        #   invokableExternal: true
+        #   invokableCC2CC: true
 
     # Logging section for the chaincode container
     logging:
-      # Default level for all loggers within the chaincode container
-      level:  info
-      # Override default level for the 'shim' logger
-      shim:   warning
-      # Format for the chaincode container logs
-      format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
+        # Default level for all loggers within the chaincode container
+        level: info
+        # Override default level for the 'shim' logger
+        shim: warning
+        # Format for the chaincode container logs
+        format: "%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}"
 
 ###############################################################################
 #
@@ -576,61 +569,60 @@ chaincode:
 #
 ###############################################################################
 ledger:
+    blockchain:
 
-  blockchain:
+    state:
+        # stateDatabase - options are "goleveldb", "CouchDB"
+        # goleveldb - default state database stored in goleveldb.
+        # CouchDB - store state database in CouchDB
+        stateDatabase: goleveldb
+        # Limit on the number of records to return per query
+        totalQueryLimit: 100000
+        couchDBConfig:
+            # It is recommended to run CouchDB on the same server as the peer, and
+            # not map the CouchDB container port to a server port in docker-compose.
+            # Otherwise proper security must be provided on the connection between
+            # CouchDB client (on the peer) and server.
+            couchDBAddress: 127.0.0.1:5984
+            # This username must have read and write authority on CouchDB
+            username:
+            # The password is recommended to pass as an environment variable
+            # during start up (eg CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD).
+            # If it is stored here, the file must be access control protected
+            # to prevent unintended users from discovering the password.
+            password:
+            # Number of retries for CouchDB errors
+            maxRetries: 3
+            # Number of retries for CouchDB errors during peer startup
+            maxRetriesOnStartup: 12
+            # CouchDB request timeout (unit: duration, e.g. 20s)
+            requestTimeout: 35s
+            # Limit on the number of records per each CouchDB query
+            # Note that chaincode queries are only bound by totalQueryLimit.
+            # Internally the chaincode may execute multiple CouchDB queries,
+            # each of size internalQueryLimit.
+            internalQueryLimit: 1000
+            # Limit on the number of records per CouchDB bulk update batch
+            maxBatchUpdateSize: 1000
+            # Warm indexes after every N blocks.
+            # This option warms any indexes that have been
+            # deployed to CouchDB after every N blocks.
+            # A value of 1 will warm indexes after every block commit,
+            # to ensure fast selector queries.
+            # Increasing the value may improve write efficiency of peer and CouchDB,
+            # but may degrade query response time.
+            warmIndexesAfterNBlocks: 1
+            # Create the _global_changes system database
+            # This is optional.  Creating the global changes database will require
+            # additional system resources to track changes and maintain the database
+            createGlobalChangesDB: false
 
-  state:
-    # stateDatabase - options are "goleveldb", "CouchDB"
-    # goleveldb - default state database stored in goleveldb.
-    # CouchDB - store state database in CouchDB
-    stateDatabase: goleveldb
-    # Limit on the number of records to return per query
-    totalQueryLimit: 100000
-    couchDBConfig:
-       # It is recommended to run CouchDB on the same server as the peer, and
-       # not map the CouchDB container port to a server port in docker-compose.
-       # Otherwise proper security must be provided on the connection between
-       # CouchDB client (on the peer) and server.
-       couchDBAddress: 127.0.0.1:5984
-       # This username must have read and write authority on CouchDB
-       username:
-       # The password is recommended to pass as an environment variable
-       # during start up (eg CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD).
-       # If it is stored here, the file must be access control protected
-       # to prevent unintended users from discovering the password.
-       password:
-       # Number of retries for CouchDB errors
-       maxRetries: 3
-       # Number of retries for CouchDB errors during peer startup
-       maxRetriesOnStartup: 12
-       # CouchDB request timeout (unit: duration, e.g. 20s)
-       requestTimeout: 35s
-       # Limit on the number of records per each CouchDB query
-       # Note that chaincode queries are only bound by totalQueryLimit.
-       # Internally the chaincode may execute multiple CouchDB queries,
-       # each of size internalQueryLimit.
-       internalQueryLimit: 1000
-       # Limit on the number of records per CouchDB bulk update batch
-       maxBatchUpdateSize: 1000
-       # Warm indexes after every N blocks.
-       # This option warms any indexes that have been
-       # deployed to CouchDB after every N blocks.
-       # A value of 1 will warm indexes after every block commit,
-       # to ensure fast selector queries.
-       # Increasing the value may improve write efficiency of peer and CouchDB,
-       # but may degrade query response time.
-       warmIndexesAfterNBlocks: 1
-       # Create the _global_changes system database
-       # This is optional.  Creating the global changes database will require
-       # additional system resources to track changes and maintain the database
-       createGlobalChangesDB: false
-
-  history:
-    # enableHistoryDatabase - options are true or false
-    # Indicates if the history of key updates should be stored.
-    # All history 'index' will be stored in goleveldb, regardless if using
-    # CouchDB or alternate database for the state.
-    enableHistoryDatabase: true
+    history:
+        # enableHistoryDatabase - options are true or false
+        # Indicates if the history of key updates should be stored.
+        # All history 'index' will be stored in goleveldb, regardless if using
+        # CouchDB or alternate database for the state.
+        enableHistoryDatabase: true
 
 ###############################################################################
 #

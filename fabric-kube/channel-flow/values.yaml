@@ -5,7 +5,7 @@
 # number of times to retry a failed leaf task
 retryCount: 4
 
-hyperledgerVersion: 1.4.5
+hyperledgerVersion: 1.4.7
 
 # see the Raft sample in the README for how to enable TLS
 tlsEnabled: false
@@ -34,7 +34,7 @@ logLevel: info
 flow:
   channel:
     # should we run top level channel flows in parallel? 
-    # dont set to true if you are using Kafka orderer (as of HL 1.4.0)
+    # don't set to true if you are using Kafka orderer (as of HL 1.4.0)
     parallel: false
     # fill in this array with channel names to limit the channel flow only to these ones
     include: []
@@ -44,4 +44,3 @@ flow:
   update: 
     # run channel update flows in parallel? 
     parallel: true
-

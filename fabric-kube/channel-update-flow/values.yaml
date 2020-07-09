@@ -4,7 +4,7 @@
 
 retryCount: 4
 
-hyperledgerVersion: 1.4.5
+hyperledgerVersion: 1.4.7
 
 # see the Raft sample in the README for how to enable TLS
 tlsEnabled: false

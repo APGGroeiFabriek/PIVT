@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-hyperledgerVersion: 1.4.5
+hyperledgerVersion: 1.4.7
 
 # see the Raft sample in the README for how to enable TLS
 tlsEnabled: false
@@ -45,8 +45,8 @@ peer:
     # attach chaincode's stdout to peer?
     attachStdout: true
     logging:
-      level:  info
-      shim:   info
+      level: info
+      shim: info
   persistence:
     enabled: false
     size: 16Gi
@@ -83,7 +83,7 @@ peer:
     
 # CouchDB settings. applies to all CouchDB's
 couchdb:
-  version: 0.4.15
+  version: 0.4.20
   userName: 
   password:
   persistence:
@@ -109,7 +109,7 @@ orderer:
     enabled: false
     size: 16Gi
   # when enabled, internal communication among Raft orderers are done at a different port
-  # useful when you dont want to enable TLS globally (i.e for transparent load balancing)
+  # useful when you don't want to enable TLS globally (i.e for transparent load balancing)
   # has no effect if orderer type is not etcdraft
   cluster:
     enabled: false
@@ -159,7 +159,6 @@ chaincode:
   # fill in this array with chaincode names to limit the chaincode ConfigMap only to these ones
   include: []
 
-
 # kafka settings
 hlf-kafka:
   # install kafka?
@@ -177,12 +176,12 @@ hlf-kafka:
     size: 16Gi
 
   configurationOverrides: 
-    "default.replication.factor": 4  # given a 4 node Kafka cluster
+    "default.replication.factor": 4 # given a 4 node Kafka cluster
     "unclean.leader.election.enable": false
-    "min.insync.replicas": 3  # to permit one Kafka replica to go offline
-    "message.max.bytes": "103809024"  # 99 * 1024 * 1024 B
-    "replica.fetch.max.bytes": "103809024"  # 99 * 1024 * 1024 B
-    "log.retention.ms": -1  # Since we need to keep logs indefinitely for the HL Fabric Orderer
+    "min.insync.replicas": 3 # to permit one Kafka replica to go offline
+    "message.max.bytes": "103809024" # 99 * 1024 * 1024 B
+    "replica.fetch.max.bytes": "103809024" # 99 * 1024 * 1024 B
+    "log.retention.ms": -1 # Since we need to keep logs indefinitely for the HL Fabric Orderer
 
   zookeeper:
     # should be 3, 5, or 7
@@ -193,6 +192,3 @@ hlf-kafka:
       storageClass: default
       size: 16Gi
     
-    
-      
-
