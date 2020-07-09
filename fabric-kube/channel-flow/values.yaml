@@ -31,6 +31,11 @@ externalOrderer:
 
 logLevel: info
 
+# Docker-in-docker settings
+dind:
+  # if set to true peers will use a docker in docker container for their chaincodes
+  enabled: true
+
 flow:
   channel:
     # should we run top level channel flows in parallel? 
@@ -38,10 +43,10 @@ flow:
     parallel: false
     # fill in this array with channel names to limit the channel flow only to these ones
     include: []
-  join: 
-    # run channel join flows in parallel? 
+  join:
+    # run channel join flows in parallel?
     parallel: true
-  update: 
-    # run channel update flows in parallel? 
+  update:
+    # run channel update flows in parallel?
     parallel: true
 

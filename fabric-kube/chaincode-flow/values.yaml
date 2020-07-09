@@ -31,6 +31,11 @@ externalOrderer:
 
 logLevel: info
 
+# Docker-in-docker settings
+dind:
+  # if set to true peers will use a docker in docker container for their chaincodes
+  enabled: true
+
 flow:
   chaincode:
     # should we run top level chaincode flows in parallel?
@@ -39,16 +44,16 @@ flow:
     include: []
   install:
     # should we run install step?
-    enabled: true  
+    enabled: true
     parallel: true
   instantiate:
     # should we run instantiate/upgrade step?
-    enabled: true  
+    enabled: true
     parallel: true
   invoke:
-    # should we run invoke step? 
+    # should we run invoke step?
     # we invoke chaincode after instantiate/upgrade to force the peers to actually create the chaincode containers
-    enabled: true 
+    enabled: true
     parallel: true
     function: '{"function":"ping","Args":[""]}'
 

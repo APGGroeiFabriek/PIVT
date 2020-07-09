@@ -53,9 +53,9 @@ peer:
   docker:
     dind: 
       # use a side car docker in docker container?
-      enabled: false
+      enabled: true
       # dind docker image
-      image: docker:19.03.8-dind
+      image: docker:19.03.12-dind
       persistence:
         enabled: false
         size: 16Gi
@@ -106,7 +106,6 @@ couchdb:
   restore: 
     # restore CouchDB's data from backup during restore procedure?
     enabled: true
-
 
 # Orderer settings. applies to all Orderer pods
 orderer:

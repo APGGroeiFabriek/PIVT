@@ -6,7 +6,7 @@
   {{- $_ := set $vars "ordererTlsSecret"  (printf "hlf-orderer--%s-external-tlsca" ($vars.ordererOrgName | lower)) }}
 {{- else }}
   {{- $ordererOrg := index .Values.OrdererOrgs 0 }}
-  {{- $ordererAddress := $.Values.useActualDomains | ternary (printf "%s.%s" (index $ordererOrg.Specs 0).Hostname $ordererOrg.Domain) (printf "hlf-orderer--%s--%s" ($ordererOrg.Name | lower) ((index $ordererOrg.Specs 0).Hostname | lower)) }} 
+  {{- $ordererAddress := $.Values.useActualDomains | ternary (printf "%s.%s" (index $ordererOrg.Specs 0).Hostname $ordererOrg.Domain) (printf "hlf-orderer--%s--%s" ($ordererOrg.Name | lower) ((index $ordererOrg.Specs 0).Hostname | lower)) }}
   {{- $_ := set $vars "ordererOrgName" $ordererOrg.Name }}
   {{- $_ := set $vars "ordererUrl" (printf "%s:7050" $ordererAddress ) }}
   {{- $_ := set $vars "ordererHost" (index $ordererOrg.Specs 0).Hostname }}
@@ -36,7 +36,7 @@ spec:
     hostnames: {{ $alias.hostnames }}
   {{- end }}
   {{- end }}{{""}}
-  
+
   volumes:
   - name: orderer-tlsca
     secret:
@@ -67,12 +67,12 @@ spec:
   - name: peer-{{ $org.Name | lower }}-{{ $peer | lower }}-tls
     secret:
       secretName: hlf-peer--{{ $org.Name | lower }}--{{ $peer | lower }}-tls
-      
+
 {{- end }} {{- /* Peers */ -}}
 {{- end }} {{- /* Orgs */ -}}{{""}}
 
   # chaincodes configMaps
-  {{- range $i, $chaincode := $.Values.network.chaincodes }}    
+  {{- range $i, $chaincode := $.Values.network.chaincodes }}
   {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
   - name: chaincode-{{ $chaincode.name | lower }}
     configMap:
@@ -88,7 +88,7 @@ spec:
 {{- range $i, $chaincode := .Values.network.chaincodes }}
 {{- if or (not $.Values.flow.chaincode.include) (has $chaincode.name $.Values.flow.chaincode.include) }}
 {{- if or $vars.firstStep (not $.Values.flow.chaincode.parallel) }}
-    - 
+    -
 {{- end }}
       - name: chaincode--{{ $chaincode.name }}
         template: chaincode--{{ $chaincode.name }}
@@ -125,7 +125,7 @@ spec:
 {{- $_ := set $vars "firstStep" true }}
   - name: install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}
     steps:
-     
+
 {{- range $orgName := $chaincode.orgs }}
 {{- range $i, $org := $.Values.PeerOrgs }}
 
@@ -134,13 +134,13 @@ spec:
 {{- range $peerIndex := until ($org.Template.Count | int) }}
 {{- $peer := (printf "peer%s" ($peerIndex | toString)) }}
 {{- if or $vars.firstStep (not $.Values.flow.install.parallel) }}
-    - 
+    -
 {{- end }}
       - name: maybe-install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
         template: maybe-install-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $org.Name }}--{{ $peer }}
 {{- $_ := set $vars "firstStep" false }}
-{{- end }} {{- /* peerIndex */ -}} 
-{{- end }} {{- /* if org */ -}} 
+{{- end }} {{- /* peerIndex */ -}}
+{{- end }} {{- /* if org */ -}}
 {{- end }} {{- /* peer.Orgs */ -}}
 {{- end }} {{- /* chaincode.orgs */ -}}
 {{- end }} {{- /* if chaincode included */ -}}
@@ -165,13 +165,13 @@ spec:
 
 {{- $peer := "peer0" }}
 {{- if or $vars.firstStep (not $.Values.flow.instantiate.parallel) }}
-    - 
+    -
 {{- end }}
       - name: maybe-instantiate-or-upgrade-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
         template: maybe-instantiate-or-upgrade-chaincode--{{ $chaincode.name }}-{{ $version | replace "." "-" }}--{{ $channel.name  }}--{{ $org.Name }}--{{ $peer }}
 
 {{- $_ := set $vars "firstStep" false }}
-{{- end }} {{- /* if org */ -}} 
+{{- end }} {{- /* if org */ -}}
 {{- end }} {{- /* peer.Orgs */ -}}
 {{- end }} {{- /* chaincode.channels */ -}}
 {{- end }} {{- /* if chaincode included */ -}}
@@ -196,14 +196,14 @@ spec:
 {{- $peer := (printf "peer%s" ($peerIndex | toString)) }}
 
 {{- if or $vars.firstStep (not $.Values.flow.invoke.parallel) }}
-    - 
+    -
 {{- end }}
       - name: invoke-chaincode--{{ $chaincode.name }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
         template: invoke-chaincode--{{ $chaincode.name }}--{{ $channel.name }}--{{ $org.Name }}--{{ $peer }}
 
 {{- $_ := set $vars "firstStep" false }}
-{{- end }} {{- /* peerIndex */ -}} 
-{{- end }} {{- /* if org */ -}} 
+{{- end }} {{- /* peerIndex */ -}}
+{{- end }} {{- /* if org */ -}}
 {{- end }} {{- /* peer.Orgs */ -}}
 {{ end }} {{- /* channel.orgs */ -}}
 {{- end }} {{- /* chaincode.channels */ -}}
@@ -238,33 +238,33 @@ spec:
       image: raft/hl-fabric-tools:1.4.3
       command: [sh]
       source: |
-          if peer chaincode checkinstalled --name {{ $chaincode.name }} --version {{ $version }}; then  
-            echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is already installed to peer {{ $peer }}, exiting with 0' 
-            exit 0 
-          else 
-            result=$? 
-            echo "-- result is: $result" 
-            if test $result -ne 99; then 
-              echo "-- result is not 99, exiting with $result" 
-              exit $result 
-            fi 
-          fi 
+          if peer chaincode checkinstalled --name {{ $chaincode.name }} --version {{ $version }}; then
+            echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is already installed to peer {{ $peer }}, exiting with 0'
+            exit 0
+          else
+            result=$?
+            echo "-- result is: $result"
+            if test $result -ne 99; then
+              echo "-- result is not 99, exiting with $result"
+              exit $result
+            fi
+          fi
 
-          echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is not installed to peer {{ $peer }}, will install..' 
+          echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is not installed to peer {{ $peer }}, will install..'
 
           {{- if eq $language "golang" }}
 
-          # chaincode is packed with tar, first extract it 
-          mkdir -p $GOPATH/src/chaincode && 
-          tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C $GOPATH/src/chaincode && 
+          # chaincode is packed with tar, first extract it
+          mkdir -p $GOPATH/src/chaincode &&
+          tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C $GOPATH/src/chaincode &&
           peer chaincode install --path chaincode/{{ $chaincode.name }} --name {{ $chaincode.name }} \
               --version {{ $version }} --lang {{ $language }}
 
           {{- else }}
 
-          # chaincode is packed with tar, first extract it 
-          mkdir -p /chaincode && 
-          tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C /chaincode && 
+          # chaincode is packed with tar, first extract it
+          mkdir -p /chaincode &&
+          tar -xf /hlf_config/chaincode/{{ $chaincode.name }}.tar -C /chaincode &&
           peer chaincode install --path /chaincode/{{ $chaincode.name }} --name {{ $chaincode.name }} \
               --version {{ $version }} --lang {{ $language }}
 
@@ -277,15 +277,22 @@ spec:
           name: peer-{{ $org.Name | lower }}-admin-msp
         - mountPath: /hlf_config/chaincode/
           name: chaincode-{{ $chaincode.name | lower }}
-      
+
       env:
         - name: CORE_PEER_ADDRESS
-          value: |- 
+          value: |-
               {{- if $.Values.useActualDomains }}
                 {{ $peer }}.{{ $org.Domain }}:7051
               {{- else }}
                 hlf-peer--{{ $org.Name | lower }}--{{ $peer | lower }}:7051
               {{- end }}
+        {{- if not $.Values.dind.enabled }}
+        - name: CORE_VM_ENDPOINT
+          value: unix:///host/var/run/docker.sock
+        {{- else }}
+        - name: CORE_VM_ENDPOINT
+          value: tcp://localhost:2375
+        {{- end }}
         - name: CORE_PEER_TLS_ENABLED
           value: {{ $.Values.tlsEnabled | quote }}
         - name: FABRIC_LOGGING_SPEC
@@ -299,8 +306,8 @@ spec:
         - name: CORE_PEER_TLS_ROOTCERT_FILE
           value: /etc/hyperledger/fabric/tls/ca.crt
 
-{{ end }} {{- /* peerIndex */ -}} 
-{{ end }} {{- /* if org */ -}} 
+{{ end }} {{- /* peerIndex */ -}}
+{{ end }} {{- /* if org */ -}}
 {{ end }} {{- /* peer.Orgs */ -}}
 {{ end }} {{- /* chaincode.orgs */ -}}
 {{- end }} {{- /* if chaincode included */ -}}
@@ -335,41 +342,41 @@ spec:
       image: raft/hl-fabric-tools:1.4.3
       command: [sh]
       source: |
-          if peer chaincode checkinstantiated --name {{ $chaincode.name }} --version {{ $version }} --channelID {{ $channel.name }}; then  
-            echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is already instantiated on channel {{ $channel.name }}, exiting with 0' 
-            exit 0 
-          else 
-            result=$? 
-            echo "-- result is: $result" 
-            if test $result -ne 99; then 
-              echo "-- result is not 99, exiting with $result" 
-              exit $result 
-            fi 
-          fi 
+          if peer chaincode checkinstantiated --name {{ $chaincode.name }} --version {{ $version }} --channelID {{ $channel.name }}; then
+            echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is already instantiated on channel {{ $channel.name }}, exiting with 0'
+            exit 0
+          else
+            result=$?
+            echo "-- result is: $result"
+            if test $result -ne 99; then
+              echo "-- result is not 99, exiting with $result"
+              exit $result
+            fi
+          fi
 
-          echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is not instantiated on channel {{ $channel.name }}, will check another version..' 
+          echo '-- Chaincode {{ $chaincode.name }} version {{ $version }} is not instantiated on channel {{ $channel.name }}, will check another version..'
 
-          if peer chaincode checkinstantiated --name {{ $chaincode.name }} --channelID {{ $channel.name }}; then  
-            echo '-- Chaincode {{ $chaincode.name }} with another version is already instantiated on channel {{ $channel.name }}, will perform an upgrade chaincode transaction..' 
-            doUpgrade=true 
-          else 
-            result=$? 
-            echo "-- result is: $result" 
-            if test $result -ne 99; then 
-              echo "-- result is not 99, exiting with $result" 
-              exit $result 
-            fi 
-          fi 
+          if peer chaincode checkinstantiated --name {{ $chaincode.name }} --channelID {{ $channel.name }}; then
+            echo '-- Chaincode {{ $chaincode.name }} with another version is already instantiated on channel {{ $channel.name }}, will perform an upgrade chaincode transaction..'
+            doUpgrade=true
+          else
+            result=$?
+            echo "-- result is: $result"
+            if test $result -ne 99; then
+              echo "-- result is not 99, exiting with $result"
+              exit $result
+            fi
+          fi
 
-          if [ -z "$doUpgrade" ]; then 
-            echo '-- Chaincode {{ $chaincode.name }} is not instantiated on channel {{ $channel.name }}, will instantiate..' 
+          if [ -z "$doUpgrade" ]; then
+            echo '-- Chaincode {{ $chaincode.name }} is not instantiated on channel {{ $channel.name }}, will instantiate..'
             peer chaincode instantiate --name {{ $chaincode.name }} --version {{ $version }} --lang {{ $language }} \
                   --channelID {{ $channel.name }} --orderer {{ $vars.ordererUrl }} \
                   --policy "{{ $channel.policy }}" --ctor '{"Args":[""]}' \
             {{- if $.Values.tlsEnabled }}
                   --tls --cafile /hlf_config/orderer-tlsca/tlscacert.pem \
             {{- end }}
-          ; else 
+          ; else
             peer chaincode upgrade --name {{ $chaincode.name }} --version {{ $version }} --lang {{ $language }} \
                   --channelID {{ $channel.name }} --orderer {{ $vars.ordererUrl }} \
                   --policy "{{ $channel.policy }}" --ctor '{"Args":[""]}' \
@@ -385,10 +392,10 @@ spec:
           name: peer-{{ $org.Name | lower }}-{{ $peer | lower }}-tls
         - mountPath: /etc/hyperledger/fabric/msp/
           name: peer-{{ $org.Name | lower }}-admin-msp
-      
+
       env:
         - name: CORE_PEER_ADDRESS
-          value: |- 
+          value: |-
               {{- if $.Values.useActualDomains }}
                 {{ $peer }}.{{ $org.Domain }}:7051
               {{- else }}
@@ -407,7 +414,7 @@ spec:
         - name: CORE_PEER_TLS_ROOTCERT_FILE
           value: /etc/hyperledger/fabric/tls/ca.crt
 
-{{ end }} {{- /* if org */ -}} 
+{{ end }} {{- /* if org */ -}}
 {{ end }} {{- /* peer.Orgs */ -}}
 {{ end }} {{- /* chaincode.channels */ -}}
 {{- end }} {{- /* if chaincode included */ -}}
@@ -452,10 +459,10 @@ spec:
           name: peer-{{ $org.Name | lower }}-{{ $peer | lower }}-tls
         - mountPath: /etc/hyperledger/fabric/msp/
           name: peer-{{ $org.Name | lower }}-admin-msp
-      
+
       env:
         - name: CORE_PEER_ADDRESS
-          value: |- 
+          value: |-
               {{- if $.Values.useActualDomains }}
                 {{ $peer }}.{{ $org.Domain }}:7051
               {{- else }}
@@ -474,8 +481,8 @@ spec:
         - name: CORE_PEER_TLS_ROOTCERT_FILE
           value: /etc/hyperledger/fabric/tls/ca.crt
 
-{{ end }} {{- /* peerIndex */ -}} 
-{{ end }} {{- /* if org */ -}} 
+{{ end }} {{- /* peerIndex */ -}}
+{{ end }} {{- /* if org */ -}}
 {{ end }} {{- /* peer.Orgs */ -}}
 {{ end }} {{- /* channel.orgs */ -}}
 {{ end }} {{- /* chaincode.channels */ -}}

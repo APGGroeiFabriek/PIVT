@@ -288,7 +288,7 @@ spec:
         - name: CORE_PEER_CHAINCODELISTENADDRESS
           value: 0.0.0.0:7052
         - name: CORE_PEER_GOSSIP_BOOTSTRAP
-          value: >- 
+          value: >-
         {{- range $peerIndexInner := until ($org.Template.Count | int) }}
         {{- $peer := (printf "peer%s" ($peerIndexInner | toString)) }}
         {{- $peerGossipAddress := $.Values.useActualDomains | ternary (printf "%s.%s:7051" $peer $org.Domain) (printf "hlf-peer--%s--%s:7051" ($org.Name | lower) ($peer | lower)) }}
