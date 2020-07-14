@@ -65,10 +65,10 @@ peer:
     enabled: true
     # is antiAffinity preferred or required?
     strict: false
-  backup: 
+  backup:
     # take backup of peers during backup procedure?
     enabled: true
-  restore: 
+  restore:
     # restore peers data from backup during restore procedure?
     enabled: true
   operations:
@@ -80,21 +80,21 @@ peer:
   metrics:
     enabled: false
     provider: prometheus
-    
+
 # CouchDB settings. applies to all CouchDB's
 couchdb:
-  version: 0.4.20
-  userName: 
+  version: amd64-0.4.20
+  userName:
   password:
   persistence:
     enabled: false
     size: 16Gi
   ingress:
     enabled: false
-  backup: 
+  backup:
     # take backup of CouchDB's during backup procedure?
     enabled: true
-  restore: 
+  restore:
     # restore CouchDB's data from backup during restore procedure?
     enabled: true
 
@@ -130,21 +130,21 @@ orderer:
     enabled: true
     # is antiAffinity preferred or required?
     strict: false
-  backup: 
+  backup:
     # take backup of orderers during backup procedure?
     enabled: true
-  restore: 
+  restore:
     # restore orderers data from backup during restore procedure?
     enabled: true
   operations:
     enabled: false
     listenAddress: 0.0.0.0:8443
     servicePort: 8443
-    tls: 
+    tls:
       enabled: false
   metrics:
     enabled: false
-    provider: prometheus    
+    provider: prometheus
 
 # CA (Certificate Authority) settings. applies to all CA's
 ca:
@@ -175,7 +175,7 @@ hlf-kafka:
     storageClass: default
     size: 16Gi
 
-  configurationOverrides: 
+  configurationOverrides:
     "default.replication.factor": 4 # given a 4 node Kafka cluster
     "unclean.leader.election.enable": false
     "min.insync.replicas": 3 # to permit one Kafka replica to go offline
@@ -191,4 +191,3 @@ hlf-kafka:
       enabled: false
       storageClass: default
       size: 16Gi
-    
