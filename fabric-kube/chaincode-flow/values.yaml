@@ -31,11 +31,6 @@ externalOrderer:
 
 logLevel: info
 
-# Docker-in-docker settings
-dind:
-  # if set to true peers will use a docker in docker container for their chaincodes
-  enabled: true
-
 flow:
   chaincode:
     # should we run top level chaincode flows in parallel?

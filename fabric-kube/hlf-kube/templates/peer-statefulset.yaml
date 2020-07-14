@@ -325,6 +325,8 @@ spec:
         - name: CORE_PEER_TLS_ROOTCERT_FILE
           value: /etc/hyperledger/fabric/tls/ca.crt
         
+        - name: CORE_CHAINCODE_BUILDER
+          value: hyperledger/fabric-ccenv:{{ $.Values.hyperledgerVersion }}
         - name: CORE_CHAINCODE_LOGGING_LEVEL
           value: {{ $.Values.peer.chaincode.logging.level }}
         - name: CORE_CHAINCODE_LOGGING_SHIM
@@ -393,7 +395,11 @@ spec:
         env:
         - name: DOCKER_TLS_CERTDIR
           # leave empty to disable TLS
-          value: 
+          value:
+        {{- if $.Values.peer.docker.registryMirror.enabled }}
+        - name: DOCKER_OPTS
+          value: --registry-mirror={{ $.Values.peer.docker.registryMirror.address }}
+        {{- end }}
 
       {{- end }} {{- /* if peer.docker.dind.enabled */ -}}{{""}}
 

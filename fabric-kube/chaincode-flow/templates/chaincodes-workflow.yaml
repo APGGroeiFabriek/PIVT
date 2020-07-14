@@ -286,13 +286,6 @@ spec:
               {{- else }}
                 hlf-peer--{{ $org.Name | lower }}--{{ $peer | lower }}:7051
               {{- end }}
-        {{- if not $.Values.dind.enabled }}
-        - name: CORE_VM_ENDPOINT
-          value: unix:///host/var/run/docker.sock
-        {{- else }}
-        - name: CORE_VM_ENDPOINT
-          value: tcp://localhost:2375
-        {{- end }}
         - name: CORE_PEER_TLS_ENABLED
           value: {{ $.Values.tlsEnabled | quote }}
         - name: FABRIC_LOGGING_SPEC

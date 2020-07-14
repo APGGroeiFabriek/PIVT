@@ -265,13 +265,6 @@ spec:
       env:
         - name: FABRIC_LOGGING_SPEC
           value: {{ $.Values.logLevel }}
-        {{- if not $.Values.dind.enabled }}
-        - name: CORE_VM_ENDPOINT
-          value: unix:///host/var/run/docker.sock
-        {{- else }}
-        - name: CORE_VM_ENDPOINT
-          value: tcp://localhost:2375
-        {{- end }}
         - name: CORE_PEER_LOCALMSPID
           value: {{ $org.Name }}MSP
         - name: CORE_PEER_TLS_CERT_FILE

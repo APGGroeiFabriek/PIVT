@@ -7,32 +7,29 @@ retryCount: 4
 
 backup:
   # if not specified defaults to current date
-  key: 
-  target: 
+  key:
+  target:
     # only azureBlobStorage for now, feel free to implement S3
     type: azureBlobStorage
-    azureBlobStorage: 
+    azureBlobStorage:
       # storage account name
-      accountName: 
+      accountName:
       # container name in storage account
-      destination: hlf-backup 
+      destination: hlf-backup
       # credentials
-      accessKey: 
+      accessKey:
 
 flow:
   peer:
-    backup: 
+    backup:
       # take backup of peers?
       enabled: true
   couchdb:
-    backup: 
+    backup:
       # take backup of CouchDB's?
       enabled: true
   orderer:
     replicas: 1
-    backup: 
+    backup:
       # take backup of orderers?
       enabled: true
-      
-
-

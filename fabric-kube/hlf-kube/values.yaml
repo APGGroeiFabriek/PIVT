@@ -51,7 +51,7 @@ peer:
     enabled: false
     size: 16Gi
   docker:
-    dind: 
+    dind:
       # use a side car docker in docker container?
       enabled: true
       # dind docker image
@@ -59,6 +59,10 @@ peer:
       persistence:
         enabled: false
         size: 16Gi
+    registryMirror:
+      # use a registry mirror for docker?
+      enabled: false
+      address: http://192.168.206.128:5000
   ingress:
     enabled: false
     annotations:
