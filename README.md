@@ -70,7 +70,7 @@ This work is licensed under the same license with HL Fabric; [Apache License 2.0
 * [HL Fabric binaries](https://hyperledger-fabric.readthedocs.io/en/release-1.4/install.html)
 * [Helm](https://github.com/helm/helm/releases/tag/v2.16.0), 2.16 or newer 2.xx versions
 * [jq](https://stedolan.github.io/jq/download/) 1.5+ and [yq](https://pypi.org/project/yq/) 2.6+
-* [Argo](https://github.com/argoproj/argo/blob/master/docs/getting-started.md), both CLI and Controller 2.4.0+
+* [Argo](https://github.com/argoproj/argo/blob/master/docs/quick-start.md), both CLI and Controller 2.4.0+
 * [Minio](https://github.com/argoproj/argo/blob/master/docs/configure-artifact-repository.md), only required for backup/restore and new-peer-org flows
 * Run all the commands in *fabric-kube* folder
 * AWS EKS users please also apply this [fix](https://github.com/APGGroeiFabriek/PIVT/issues/1)
