@@ -61,7 +61,7 @@ peer:
         size: 16Gi
     registryMirror:
       # use a registry mirror for docker?
-      enabled: false
+      enabled: true
       address: http://192.168.206.128:5000
   ingress:
     enabled: false

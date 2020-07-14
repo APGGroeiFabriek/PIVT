@@ -385,6 +385,9 @@ spec:
       # Docker dind container
       - name: docker
         image: {{ $.Values.peer.docker.dind.image }}
+        {{- if $.Values.peer.docker.registryMirror.enabled }}
+        args: ["--registry-mirror={{ $.Values.peer.docker.registryMirror.address }}"]
+        {{- end }}
         securityContext:
           privileged: true
       
@@ -396,10 +399,6 @@ spec:
         - name: DOCKER_TLS_CERTDIR
           # leave empty to disable TLS
           value:
-        {{- if $.Values.peer.docker.registryMirror.enabled }}
-        - name: DOCKER_OPTS
-          value: --registry-mirror={{ $.Values.peer.docker.registryMirror.address }}
-        {{- end }}
 
       {{- end }} {{- /* if peer.docker.dind.enabled */ -}}{{""}}
 
